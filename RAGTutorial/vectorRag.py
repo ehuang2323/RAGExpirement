@@ -53,15 +53,18 @@ query_vector = model.encode([query])
 results = index.query(vector=query_vector.tolist(), top_k=1, include_metadata=True)
 
 # Retrieve and process the results
-retrieved_info = [knowledge_base[int(result['id'].split("_")[1])] for result in results['matches']]
-context = " ".join(retrieved_info)
+try:
+    retrieved_info = [knowledge_base[int(result['id'].split("_")[1])] for result in results['matches']]
+    context = " ".join(retrieved_info)
 
-def generate_response(query, context):
-    return f"Query: {query}\nContext: {context}"
+    def generate_response(query, context):
+        return f"Context: {context}"
 
-# Generate and return the response
-response = generate_response(query, context)
-if(context != " "):
-    print(response)
-else:
-    print("no match")
+    # Generate and return the response
+    response = generate_response(query, context)
+    if(context != " "):
+        print(response)
+    else:
+        print("no match")
+except:
+    print('No matches found')
