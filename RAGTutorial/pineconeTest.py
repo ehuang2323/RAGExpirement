@@ -3,10 +3,14 @@ from pinecone import Pinecone
 from pinecone import ServerlessSpec, PodSpec
 import pandas as pd
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 use_severless = True
 
-api_key = os.environ.get('9703970d-8243-4909-8d81-f7b9799fdd7b') or '9703970d-8243-4909-8d81-f7b9799fdd7b'
+api_key = os.environ.get(os.getenv('MY_KEY')) or os.getenv('MY_KEY')
 pc = Pinecone(api_key=api_key)
 
 if use_severless:
