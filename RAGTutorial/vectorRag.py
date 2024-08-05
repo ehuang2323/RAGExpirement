@@ -1,10 +1,15 @@
 from sentence_transformers import SentenceTransformer
-import pinecone
+from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader, PyPDFLoader, TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from pinecone import Pinecone
 import os
 from pinecone import ServerlessSpec, PodSpec
 import pandas as pd
 import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Initialize the embedding model
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -13,7 +18,7 @@ index_name = "test"
 ####
 use_severless = True
 
-api_key = os.environ.get('d52a0a0f-20b9-4a19-be54-e64daeeacc17') or 'd52a0a0f-20b9-4a19-be54-e64daeeacc17'
+api_key = os.environ.get(os.getenv('MY_KEY')) or os.getenv('MY_KEY')
 pc = Pinecone(api_key=api_key)
 
 if use_severless:
