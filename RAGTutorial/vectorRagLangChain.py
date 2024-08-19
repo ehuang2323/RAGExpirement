@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #Initialize the embedding model
-model = SentenceTransformer('all-MiniLWM-L6-v2')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 index_name = "test"
 
 ####
@@ -41,7 +41,8 @@ while not pc.describe_index(index_name).status['ready']:
 
 index = pc.Index(index_name)
 
-loader = TextLoader(file_path='/Users/eddie/VSC/RAGExpirement/RAGTutorial/data/txt/vb.txt')
+# loader = TextLoader(file_path='/Users/eddie/VSC/RAGExpirement/RAGTutorial/data/txt/vb.txt')
+loader = PyPDFLoader("/Users/eddie/VSC/RAGExpirement/RAGTutorial/data/PDF/Cambridge - Wikipedia.pdf")
 
 data = loader.load()
 
