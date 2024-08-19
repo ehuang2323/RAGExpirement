@@ -34,7 +34,7 @@ load_dotenv()
 
 
 # print(os.getenv('MY_KEY'))
-loader = TextLoader(file_path='/Users/eddie/VSC/RAGExpirement/RAGTutorial/txt/vb.txt')
+loader = TextLoader(file_path='/Users/eddie/VSC/RAGExpirement/RAGTutorial/data/txt/vb.txt')
 # cambridge = PyPDFLoader("/Users/eddie/VSC/RAGExpirement/RAGTutorial/PDF/Cambridge - Wikipedia.pdf")
 # oxford = PyPDFLoader("/Users/eddie/VSC/RAGExpirement/RAGTutorial/PDF/Oxford - Wikipedia.pdf")
 # earth = PyPDFLoader("/Users/eddie/VSC/RAGExpirement/RAGTutorial/PDF/Earth - Wikipedia.pdf")
@@ -42,14 +42,18 @@ loader = TextLoader(file_path='/Users/eddie/VSC/RAGExpirement/RAGTutorial/txt/vb
 
 data = loader.load()
 
-print (f'You have {len(data)} document(s) in your data')
-print (f'There are {len(data[0].page_content)} characters in your sample document')
-print (f'Here is a sample: {data[0].page_content[:200]}')
+# print (f'You have {len(data)} document(s) in your data')
+# print (f'There are {len(data[0].page_content)} characters in your sample document')
+# print (f'Here is a sample: {data[0].page_content[:200]}')
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 texts = text_splitter.split_documents(data)
 
-print (f'Now you have {len(texts)} documents')
+string_text = [texts[i].page_content for i in range(len(texts))]
+
+print(string_text[0])
+
+# print (f'Now you have {len(texts)} documents')
 
 ####
 
@@ -96,37 +100,37 @@ print (f'Now you have {len(texts)} documents')
 # except:
 #     print('No matches found')
 
-OPENAI_API_KEY = os.getenv('OPENAI_Key')
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+# OPENAI_API_KEY = os.getenv('OPENAI_Key')
+# embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import Chroma
 
-vectorstore = Chroma.from_documents(texts, embeddings)
+# vectorstore = Chroma.from_documents(texts, embeddings)
 
-query = "Cambridge is well known as the city that is the home of which college?"
-docs = vectorstore.similarity_search(query)
+# query = "Cambridge is well known as the city that is the home of which college?"
+# docs = vectorstore.similarity_search(query)
 
-for doc in docs:
-    print (f"{doc.page_content}\n")
+# for doc in docs:
+#     print (f"{doc.page_content}\n")
 
 
-# initialize pinecone
-pinecone_api_key = os.environ.get(os.getenv('MY_KEY')) or os.getenv('MY_KEY')
-pc = Pinecone(api_key=pinecone_api_key)
+# # initialize pinecone
+# pinecone_api_key = os.environ.get(os.getenv('MY_KEY')) or os.getenv('MY_KEY')
+# pc = Pinecone(api_key=pinecone_api_key)
 
-index_name = 'langchain'
-spec = ServerlessSpec(cloud='aws', region= 'us-east-1')
-dimensions = 384
+# index_name = 'langchain'
+# spec = ServerlessSpec(cloud='aws', region= 'us-east-1')
+# dimensions = 384
 
-if index_name not in pc.list_indexes().names():
-    dimensions = 384
-    pc.create_index(
-        name=index_name,
-        dimension=dimensions,
-        metric="cosine",
-        spec=spec
-    )
+# if index_name not in pc.list_indexes().names():
+#     dimensions = 384
+#     pc.create_index(
+#         name=index_name,
+#         dimension=dimensions,
+#         metric="cosine",
+#         spec=spec
+#     )
 
-index = pc.Index(index_name)
+# index = pc.Index(index_name)
 
-docsearch = index.from_texts([t.page_content for t in texts], embeddings, index_name=index_name)
+# docsearch = index.from_texts([t.page_content for t in texts], embeddings, index_name=index_name)
